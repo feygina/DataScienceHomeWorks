@@ -1,18 +1,28 @@
 from pymystem3 import Mystem
-import re
 from texts import *
 import pymorphy2
 
 
+def make_clear_text(text):
+    m = Mystem()
+    clear_text = []
+    lm = m.analyze(text)
+    for i in range(0, len(lm)):
+        if 'analysis' in lm[i]:
+            clear_text.append(lm[i]['text'])
+    return clear_text
+
+
 def usage_count(text):
     # общее количество словоупотреблений
-    result = len(re.findall("[а-яА-Я]+", text))
+    # result = len(re.findall("[а-яА-Я]+", text))
+    result = len(make_clear_text(text))
     return result
 
 
 def count_different_word_forms(text):
     # число различных словоформ
-    clear_text = re.findall("[а-яА-Я]+", text)
+    clear_text = make_clear_text(text)
     result = len(set(clear_text))
     return result
 
@@ -22,7 +32,7 @@ def number_of_unique_lemmas(text):
     m = Mystem()
     lemmas = m.lemmatize(text)
     lemmatized_text = ''.join(lemmas)
-    clear_text = re.findall("[а-яА-Я]+", lemmatized_text)
+    clear_text = make_clear_text(lemmatized_text)
     result = len(set(clear_text))
     return result
 
@@ -30,7 +40,7 @@ def number_of_unique_lemmas(text):
 def number_of_unknown_words(text):
     # число незнакомых слов
     morph = pymorphy2.MorphAnalyzer()
-    clear_text = set(re.findall("[а-яА-Я]+", text))
+    clear_text = set(make_clear_text(text))
     result = sum([not morph.word_is_known(x) for x in clear_text])
     return result
 
@@ -44,7 +54,7 @@ def frequency_homonymous_word_forms(text):
     # абсолютная и относительная (С УЧЕТОМ/без учета неизменяемых слов) частота омонимичных словоформ
     morph = pymorphy2.MorphAnalyzer()
     result = 0
-    clear_text = set(re.findall("[а-яА-Я]+", text))
+    clear_text = set(make_clear_text(text))
     for j in clear_text:
         m = morph.parse(j)
         set_of_normal_forms = set([m[i].normal_form for i in range(0, len(m))])
@@ -69,7 +79,7 @@ def wordform_with_the_largest_number_of_homonyms(text):
     pass
 
 
-def most_frequency_homonym(text):
+def most_frequent_homonym(text):
     #наиболее частотный омоним
     pass
 
