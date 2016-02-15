@@ -9,7 +9,7 @@ def make_clear_text(text):
     clear_text = []
     lm = m.analyze(text.lower())
     for i in range(0, len(lm)):
-        if 'analysis' in lm[i]:
+        if 'analysis' in lm[i] and len(lm[i]['text']) > 1:
             clear_text.append(lm[i]['text'])
     return clear_text
 
@@ -62,7 +62,7 @@ def frequency_homonymous_word_forms(text):
         # print(set_of_normal_forms)
         if len(m) > 1 and len(set_of_normal_forms) == 1:
             result += 1
-    return result
+    return result/len(clear_text)
 
 
 def frequency_of_word_forms_with_lexicalmorphological_homonymy(text):
@@ -76,12 +76,34 @@ def frequency_of_word_forms_with_lexicalmorphological_homonymy(text):
         # print(set_of_normal_forms)
         if len(m) > 1 and len(set_of_lexem) != 1:
             result += 1
-    return result
+    return result/len(clear_text)
 
 
 def maximum_and_average_number_of_homonyms_in_the_text_word_forms(text):
     # максимальное и среднее число омонимов у словоформ текста
-    pass
+    morph = pymorphy2.MorphAnalyzer()
+    result = {}
+    max_homonym = 0
+    mean_homonym = 0
+    counter = 0
+    clear_text = make_clear_text(text)
+    for j in clear_text:
+        set_of_lexem = []
+        if j not in result:
+            result[j] = 0
+        m = morph.parse(j)
+        if morph.word_is_known(j):
+            set_of_lexem = set([m[i][4][0][2] for i in range(0, len(m))])
+        set_of_normal_forms = set([m[i].normal_form for i in range(0, len(m))])
+        if len(m) > 1 and (len(set_of_lexem) > 1 or len(set_of_normal_forms) == 1):
+            result[j] += 1
+            counter += 1
+            mean_homonym += len(m)
+            if len(m) > max_homonym:
+                max_homonym = len(m)
+    print("Максимальное число омонимов у словоформ: ", max_homonym)
+    print("Среднее число омонимов у словоформ: ", mean_homonym/counter)
+    return result
 
 
 def wordform_with_the_largest_number_of_homonyms(text):
@@ -91,7 +113,8 @@ def wordform_with_the_largest_number_of_homonyms(text):
 
 def most_frequent_homonym(text):
     # наиболее частотный омоним
-    pass
+    homonyms_dictionary = maximum_and_average_number_of_homonyms_in_the_text_word_forms(text)
+    return max(homonyms_dictionary, key=homonyms_dictionary.get)
 
 
 print(usage_count(scientific_text))
@@ -101,5 +124,6 @@ print(lexical_richness_of_the_text_index(scientific_text))
 print(number_of_unknown_words(scientific_text))
 print(frequency_homonymous_word_forms(scientific_text))
 print(frequency_of_word_forms_with_lexicalmorphological_homonymy(scientific_text))
-
+dictionary = maximum_and_average_number_of_homonyms_in_the_text_word_forms(publicistic_text)
+print(most_frequent_homonym(artistic_text))
 
