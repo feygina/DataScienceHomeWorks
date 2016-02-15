@@ -101,20 +101,22 @@ def maximum_and_average_number_of_homonyms_in_the_text_word_forms(text):
             mean_homonym += len(m)
             if len(m) > max_homonym:
                 max_homonym = len(m)
+                wordform_with_max_homonym = j
     print("Максимальное число омонимов у словоформ: ", max_homonym)
     print("Среднее число омонимов у словоформ: ", mean_homonym/counter)
-    return result
+    print("Словоформа с наибольшим числом омонимов: ", wordform_with_max_homonym)
+    print("Наиболее частотный омоним: ",  max(result, key=result.get))
 
 
-def wordform_with_the_largest_number_of_homonyms(text):
-    # словоформы с наибольшим числом омонимов
-    pass
-
-
-def most_frequent_homonym(text):
-    # наиболее частотный омоним
-    homonyms_dictionary = maximum_and_average_number_of_homonyms_in_the_text_word_forms(text)
-    return max(homonyms_dictionary, key=homonyms_dictionary.get)
+# def wordform_with_the_largest_number_of_homonyms(text):
+#     # словоформы с наибольшим числом омонимов
+#     pass
+#
+#
+# def most_frequent_homonym(text):
+#     # наиболее частотный омоним
+#     homonyms_dictionary = maximum_and_average_number_of_homonyms_in_the_text_word_forms(text)
+#     return max(homonyms_dictionary, key=homonyms_dictionary.get)
 
 
 print(usage_count(scientific_text))
@@ -124,6 +126,5 @@ print(lexical_richness_of_the_text_index(scientific_text))
 print(number_of_unknown_words(scientific_text))
 print(frequency_homonymous_word_forms(scientific_text))
 print(frequency_of_word_forms_with_lexicalmorphological_homonymy(scientific_text))
-dictionary = maximum_and_average_number_of_homonyms_in_the_text_word_forms(publicistic_text)
-print(most_frequent_homonym(artistic_text))
+maximum_and_average_number_of_homonyms_in_the_text_word_forms(artistic_text)
 
