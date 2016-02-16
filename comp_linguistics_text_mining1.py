@@ -123,10 +123,10 @@ def maximum_and_average_number_of_homonyms_in_the_text_word_forms(text):
         if j not in result:
             result[j] = 0
         m = morph.parse(j)
-        if morph.word_is_known(j):
-            set_of_lexem = set([m[i][4][0][2] for i in range(0, len(m))])
+        # if morph.word_is_known(j):
+            # set_of_lexem = set([m[i][4][0][2] for i in range(0, len(m))])
         # set_of_normal_forms = set([m[i].normal_form for i in range(0, len(m))])
-        if len(m) > 1 and len(set_of_lexem) > 1:
+        if len(m) > 1:
             result[j] += 1
             counter += 1
             mean_homonym += len(m)
