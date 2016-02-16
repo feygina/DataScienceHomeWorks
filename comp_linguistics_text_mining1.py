@@ -9,9 +9,17 @@ def make_clear_text(text):
     clear_text = []
     lm = m.analyze(text.lower())
     for i in range(0, len(lm)):
-        if 'analysis' in lm[i] and len(lm[i]['text']) > 1:
+        if 'analysis' in lm[i]:
             clear_text.append(lm[i]['text'])
     return clear_text
+
+
+def no_one_symbol_text(text):
+    # убираем слова состоящие из одного символа
+    for i in text:
+        if len(i) == 1:
+            text.remove(i)
+    return text
 
 
 def usage_count(text):
@@ -35,6 +43,7 @@ def number_of_unique_lemmas(text):
     lemmas = m.lemmatize(text)
     lemmatized_text = ''.join(lemmas)
     clear_text = make_clear_text(lemmatized_text)
+    clear_text = no_one_symbol_text(clear_text)
     result = len(set(clear_text))
     print("Количество уникальных лемм: ", result)
     return result
@@ -43,7 +52,7 @@ def number_of_unique_lemmas(text):
 def number_of_unknown_words(text):
     # число незнакомых слов
     morph = pymorphy2.MorphAnalyzer()
-    clear_text = set(make_clear_text(text))
+    clear_text = set(no_one_symbol_text(make_clear_text(text)))
     result = sum([not morph.word_is_known(x) for x in clear_text])
     print("Число незнакомых слов: ", result)
 
@@ -58,7 +67,7 @@ def frequency_homonymous_word_forms(text):
     # абсолютная и относительная (без учета неизменяемых слов) частота омонимичных словоформ
     morph = pymorphy2.MorphAnalyzer()
     result = 0
-    clear_text = set(make_clear_text(text))
+    clear_text = set(no_one_symbol_text(make_clear_text(text)))
     for j in clear_text:
         # set_of_normal_forms = set([m[i].normal_form for i in range(0, len(m))])
         # print(set_of_normal_forms)
@@ -84,7 +93,7 @@ def frequency_homonymous_word_forms_full(text):
     # абсолютная и относительная (с учетом неизменяемых слов) частота омонимичных словоформ
     morph = pymorphy2.MorphAnalyzer()
     result = 0
-    clear_text = set(make_clear_text(text))
+    clear_text = set(no_one_symbol_text(make_clear_text(text)))
     for j in clear_text:
         m = morph.parse(j)
         # set_of_normal_forms = set([m[i].normal_form for i in range(0, len(m))])
@@ -99,7 +108,7 @@ def frequency_of_word_forms_with_lexicalmorphological_homonymy(text):
     # абсолютная и относительнаю частота словоформ с лексико-морфологической омонимией
     morph = pymorphy2.MorphAnalyzer()
     result = 0
-    clear_text = set(make_clear_text(text))
+    clear_text = set(no_one_symbol_text(make_clear_text(text)))
     for j in clear_text:
         m = morph.parse(j)
         set_of_lexem = set([m[i][4][0][2] for i in range(0, len(m))])
@@ -117,7 +126,7 @@ def maximum_and_average_number_of_homonyms_in_the_text_word_forms(text):
     max_homonym = 0
     mean_homonym = 0
     counter = 0
-    clear_text = make_clear_text(text)
+    clear_text = no_one_symbol_text(make_clear_text(text))
     for j in clear_text:
         set_of_lexem = []
         if j not in result:
@@ -159,5 +168,4 @@ frequency_homonymous_word_forms_full(test_text)
 frequency_homonymous_word_forms(test_text)
 frequency_of_word_forms_with_lexicalmorphological_homonymy(test_text)
 maximum_and_average_number_of_homonyms_in_the_text_word_forms(artistic_text)
-
 
