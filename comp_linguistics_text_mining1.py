@@ -108,11 +108,13 @@ def frequency_of_word_forms_with_lexicalmorphological_homonymy(text):
     morph = pymorphy2.MorphAnalyzer()
     result = 0
     clear_text = set(no_one_symbol_text(make_clear_text(text)))
+    set_of_lexem = []
     for j in clear_text:
         m = morph.parse(j)
-        set_of_lexem = set([m[i][4][0][2] for i in range(0, len(m))])
+        if morph.word_is_known(j):
+            set_of_lexem = set([m[i][4][0][2] for i in range(0, len(m))])
         # print(set_of_normal_forms)
-        if len(m) > 1 and len(set_of_lexem) != 1:
+        if len(m) > 1 and len(set_of_lexem) > 1:
             result += 1
     print("Абсолютная частота словоформ с лексико-морфологической омонимией: ", result)
     print("Относительная частота словоформ с лексико-морфологической омонимией: ", result/len(clear_text))
@@ -148,11 +150,11 @@ def maximum_and_average_number_of_homonyms_in_the_text_word_forms(text):
 
 
 # usage_count(scientific_text)
-count_different_word_forms(scientific_text)
+count_different_word_forms(artistic_text)
 # number_of_unique_lemmas(scientific_text)
-lexical_richness_of_the_text_index(scientific_text)
-number_of_unknown_words(scientific_text)
-frequency_homonymous_word_forms_full(test_text)
-frequency_homonymous_word_forms(test_text)
-frequency_of_word_forms_with_lexicalmorphological_homonymy(test_text)
+lexical_richness_of_the_text_index(artistic_text)
+number_of_unknown_words(artistic_text)
+frequency_homonymous_word_forms_full(artistic_text)
+frequency_homonymous_word_forms(artistic_text)
+frequency_of_word_forms_with_lexicalmorphological_homonymy(artistic_text)
 maximum_and_average_number_of_homonyms_in_the_text_word_forms(artistic_text)
