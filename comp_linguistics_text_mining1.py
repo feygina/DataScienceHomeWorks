@@ -55,7 +55,33 @@ def lexical_richness_of_the_text_index(text):
 
 
 def frequency_homonymous_word_forms(text):
-    # абсолютная и относительная (С УЧЕТОМ/без учета неизменяемых слов) частота омонимичных словоформ
+    # абсолютная и относительная (без учета неизменяемых слов) частота омонимичных словоформ
+    morph = pymorphy2.MorphAnalyzer()
+    result = 0
+    clear_text = set(make_clear_text(text))
+    for j in clear_text:
+        # set_of_normal_forms = set([m[i].normal_form for i in range(0, len(m))])
+        # print(set_of_normal_forms)
+        m = morph.parse(j)
+        for k in range(0, len(m)):
+            lexeme = []
+            unchangeable_tag = []
+            unchangeable_tag.append('Fixd' in m[k].tag)
+            unchangeable = []
+            lex = m[k].lexeme
+            for i in lex:
+                lexeme.append(i.word)
+            lexeme = set(lexeme)
+            unchangeable.append(len(lexeme) == 1)
+        unchangeable = unchangeable + unchangeable_tag
+        if len(m) > 1 and True not in unchangeable:
+            result += 1
+    print("Абсолютная частота омонимичных словоформ без учета неизменяемых слов: ", result)
+    print("Относительная частота омонимичных словоформ без учета неизменяемых слов: ", result/len(clear_text))
+
+
+def frequency_homonymous_word_forms_full(text):
+    # абсолютная и относительная (с учетом неизменяемых слов) частота омонимичных словоформ
     morph = pymorphy2.MorphAnalyzer()
     result = 0
     clear_text = set(make_clear_text(text))
@@ -65,8 +91,8 @@ def frequency_homonymous_word_forms(text):
         # print(set_of_normal_forms)
         if len(m) > 1:
             result += 1
-    print("Абсолютная частота омонимичных словоформ: ", result)
-    print("Относительная частота омонимичных словоформ: ", result/len(clear_text))
+    print("Абсолютная частота омонимичных словоформ с учетом неизменяемых слов: ", result)
+    print("Относительная частота омонимичных словоформ с учетом неизменяемых слов: ", result/len(clear_text))
 
 
 def frequency_of_word_forms_with_lexicalmorphological_homonymy(text):
@@ -129,6 +155,9 @@ count_different_word_forms(scientific_text)
 # number_of_unique_lemmas(scientific_text)
 lexical_richness_of_the_text_index(scientific_text)
 number_of_unknown_words(scientific_text)
-frequency_homonymous_word_forms(scientific_text)
-frequency_of_word_forms_with_lexicalmorphological_homonymy(scientific_text)
+frequency_homonymous_word_forms_full(test_text)
+frequency_homonymous_word_forms(test_text)
+frequency_of_word_forms_with_lexicalmorphological_homonymy(test_text)
 maximum_and_average_number_of_homonyms_in_the_text_word_forms(artistic_text)
+
+
