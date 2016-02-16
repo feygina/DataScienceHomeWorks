@@ -42,8 +42,7 @@ def number_of_unique_lemmas(text):
     m = Mystem()
     lemmas = m.lemmatize(text)
     lemmatized_text = ''.join(lemmas)
-    clear_text = make_clear_text(lemmatized_text)
-    clear_text = no_one_symbol_text(clear_text)
+    clear_text = no_one_symbol_text(make_clear_text(lemmatized_text))
     result = len(set(clear_text))
     print("Количество уникальных лемм: ", result)
     return result
@@ -148,17 +147,6 @@ def maximum_and_average_number_of_homonyms_in_the_text_word_forms(text):
     print("Наиболее частотный омоним: ",  max(result, key=result.get))
 
 
-# def wordform_with_the_largest_number_of_homonyms(text):
-#     # словоформы с наибольшим числом омонимов
-#     pass
-#
-#
-# def most_frequent_homonym(text):
-#     # наиболее частотный омоним
-#     homonyms_dictionary = maximum_and_average_number_of_homonyms_in_the_text_word_forms(text)
-#     return max(homonyms_dictionary, key=homonyms_dictionary.get)
-
-
 # usage_count(scientific_text)
 count_different_word_forms(scientific_text)
 # number_of_unique_lemmas(scientific_text)
@@ -168,4 +156,3 @@ frequency_homonymous_word_forms_full(test_text)
 frequency_homonymous_word_forms(test_text)
 frequency_of_word_forms_with_lexicalmorphological_homonymy(test_text)
 maximum_and_average_number_of_homonyms_in_the_text_word_forms(artistic_text)
-
